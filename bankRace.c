@@ -15,7 +15,7 @@ void* withdraw(void* arg) {
         sleep(1);
         
         // Introduce a race condition
-        balance = balance - amount + 100;
+        balance = balance - amount;
         printf("Withdrawal successful. New balance: $%d\n", balance);
     } else {
         printf("Insufficient balance for withdrawal.\n");
