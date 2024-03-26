@@ -40,20 +40,28 @@ void* deposit(void* arg) {
 }
 
 int main() {
-    pthread_t tid1, tid2;
-    int* withdrawAmount = malloc(sizeof(int));
-    int* depositAmount = malloc(sizeof(int));
+    pthread_t tid1, tid2, tid3, tid4;
+    int* withdrawAmount1 = malloc(sizeof(int));
+    int* withdrawAmount2 = malloc(sizeof(int));
+    int* depositAmount1 = malloc(sizeof(int));
+    int* depositAmount2 = malloc(sizeof(int));
     
-    *withdrawAmount = 800;
-    *depositAmount = 300;
+    *withdrawAmount1 = 300;
+    *withdrawAmount2 = 400;
+    *depositAmount1 = 200;
+    *depositAmount2 = 500;
     
-    // Create two threads, one for withdrawal and one for deposit
-    pthread_create(&tid1, NULL, withdraw, withdrawAmount);
-    pthread_create(&tid2, NULL, deposit, depositAmount);
+    // Create four threads, two for withdrawals and two for deposits
+    pthread_create(&tid1, NULL, withdraw, withdrawAmount1);
+    pthread_create(&tid2, NULL, withdraw, withdrawAmount2);
+    pthread_create(&tid3, NULL, deposit, depositAmount1);
+    pthread_create(&tid4, NULL, deposit, depositAmount2);
     
     // Wait for threads to finish
     pthread_join(tid1, NULL);
     pthread_join(tid2, NULL);
+    pthread_join(tid3, NULL);
+    pthread_join(tid4, NULL);
     
     printf("Final balance: $%d\n", balance);
     
