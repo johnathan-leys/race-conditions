@@ -1,60 +1,60 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h>
 
-#define NUM_THREADS 4
-
-int account_balance = 1000; // initial balance
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; // mutex for thread synchronization
+int balance = 1000;  // Initial balance
 
 void* withdraw(void* arg) {
-    int amount = *(int*)arg;
-    int bal;
-
-    pthread_mutex_lock(&mutex); // acquire the mutex
-    bal = account_balance;
-    bal -= amount;
-    printf("Withdrawing %d, remaining balance: %d\n", amount, bal);
-    account_balance = bal;
-    pthread_mutex_unlock(&mutex); // release the mutex
-
-    pthread_exit(NULL);
+    int amount = *((int*)arg);
+    printf("Withdrawing $%d...\n", amount);
+    
+    // Simulate some processing delay
+    sleep(1);
+    
+    // Check if enough balance
+    if (balance >= amount) {
+        balance -= amount;
+        printf("Withdrawal successful. New balance: $%d\n", balance);
+    } else {
+        printf("Insufficient balance for withdrawal.\n");
+    }
+    
+    free(arg);
+    return NULL;
 }
 
 void* deposit(void* arg) {
-    int amount = *(int*)arg;
-    int bal;
-
-    pthread_mutex_lock(&mutex); // acquire the mutex
-    bal = account_balance;
-    bal += amount;
-    printf("Depositing %d, new balance: %d\n", amount, bal);
-    account_balance = bal;
-    pthread_mutex_unlock(&mutex); // release the mutex
-
-    pthread_exit(NULL);
+    int amount = *((int*)arg);
+    printf("Depositing $%d...\n", amount);
+    
+    // Simulate some processing delay
+    sleep(1);
+    
+    balance += amount;
+    printf("Deposit successful. New balance: $%d\n", balance);
+    
+    free(arg);
+    return NULL;
 }
 
 int main() {
-    pthread_t threads[NUM_THREADS];
-    int amounts[NUM_THREADS] = {200, 300, 400, 500};
-
-    // create threads for withdrawals
-    for (int i = 0; i < NUM_THREADS; i++) {
-        pthread_create(&threads[i], NULL, withdraw, &amounts[i]);
-    }
-
-    // create threads for deposits
-    for (int i = 0; i < NUM_THREADS; i++) {
-        pthread_create(&threads[i], NULL, deposit, &amounts[i]);
-    }
-
-    // wait for all threads to finish
-    for (int i = 0; i < NUM_THREADS; i++) {
-        pthread_join(threads[i], NULL);
-    }
-
-    printf("Final account balance: %d\n", account_balance);
-
+    pthread_t tid1, tid2;
+    int* withdrawAmount = malloc(sizeof(int));
+    int* depositAmount = malloc(sizeof(int));
+    
+    *withdrawAmount = 500;
+    *depositAmount = 300;
+    
+    // Create two threads, one for withdrawal and one for deposit
+    pthread_create(&tid1, NULL, withdraw, withdrawAmount);
+    pthread_create(&tid2, NULL, deposit, depositAmount);
+    
+    // Wait for threads to finish
+    pthread_join(tid1, NULL);
+    pthread_join(tid2, NULL);
+    
+    printf("Final balance: $%d\n", balance);
+    
     return 0;
 }
