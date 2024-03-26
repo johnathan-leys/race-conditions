@@ -9,11 +9,11 @@ void* withdraw(void* arg) {
     int amount = *((int*)arg);
     printf("Withdrawing $%d...\n", amount);
     
-    // Simulate some processing delay
-    sleep(1);
-    
-    // Check if enough balance
+    // Check if enough balance (without synchronization)
     if (balance >= amount) {
+        // Simulate some processing delay
+        sleep(1);
+        
         balance -= amount;
         printf("Withdrawal successful. New balance: $%d\n", balance);
     } else {
@@ -43,7 +43,7 @@ int main() {
     int* withdrawAmount = malloc(sizeof(int));
     int* depositAmount = malloc(sizeof(int));
     
-    *withdrawAmount = 500;
+    *withdrawAmount = 800;
     *depositAmount = 300;
     
     // Create two threads, one for withdrawal and one for deposit
