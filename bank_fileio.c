@@ -35,6 +35,7 @@ void *withdraw(void *arg) {
 void *deposit(void *arg) {
     double amount = *(double *)arg;
     double balance = read_balance();
+    print("Current Balance %.2lf\n", balance);
     printf("Depositing %.2lf\n", amount);
     balance += amount;
     write_balance(balance);
