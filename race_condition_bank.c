@@ -13,7 +13,7 @@ void* withdraw(void* amount) {
     int withdraw_amount = *(int*)amount;
 
     // Locking the critical section
-    //pthread_mutex_lock(&lock);
+    pthread_mutex_lock(&lock);
 
     printf("Attempting to withdraw $%d. Current balance: $%d\n", withdraw_amount, account_balance);
     

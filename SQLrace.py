@@ -1,8 +1,7 @@
 import sqlite3
 import threading
 
-# Demo of SQL race condition- sometimes successfully deducts 100 and 100, 
-# sometime race condition triggers and only 100 is deducted.
+# Demo of SQL race condition: value written by one thread is overwritten by other.
 
 # Function to update a record in the database
 def update_record(amount = 100):
